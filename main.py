@@ -332,14 +332,19 @@ def startgame():
     Game.levels[0]()
 
 startgame()
-
 heart=pygame.transform.scale(pygame.image.load("heart.png"),(30,30))
-
 game_over_time=180
+
+logo=pygame.transform.scale(pygame.image.load("logo.png"),(480,360))
+screen.blit(logo, ((XRES*SCALE-480)/2,(YRES*SCALE-360)/2))
+pygame.display.flip()
+for i in range(3):
+    clock.tick(1)
+
 
 while mainloop:
     tick_time = clock.tick(FPS) # milliseconds since last frame
-    pygame.display.set_caption("press Esc to quit. FPS: %.2f" % (clock.get_fps()))
+    pygame.display.set_caption("You are alone in a forest. [Esc]quit, [W]jump, [A]left, [D]right, FPS: %.2f" % (clock.get_fps()))
 
     surface = Game.background.copy()
 
