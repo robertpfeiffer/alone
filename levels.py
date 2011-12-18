@@ -238,5 +238,5 @@ def tutorial4():
                                                 [animals.Rabbit(150,235)]+
                                                 [main.Portal(350,YRES)])
 
-levels=[level6,level5,tutorial1,tutorial2,tutorial3,tutorial4,level1,level2,level3,level4,]
+levels=[tutorial1,tutorial2,tutorial3,tutorial4,level1,level2,level3,level4,level5,level6]
 

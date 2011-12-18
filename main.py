@@ -93,11 +93,11 @@ class Girl(pygame.sprite.Sprite):
             xd = 0
             if x1 < x2:
                 xd = -3
-            if x1 > x2:
+            if x1 >= x2:
                 xd = 3
             if y1 < y2:
                 yd = -3
-            if y1 > y2:
+            if y1 >= y2:
                 yd = 3
             self.move(xd, yd)
 
@@ -130,6 +130,8 @@ class Girl(pygame.sprite.Sprite):
             Game.over = True
 
     def update(self):
+        if Game.win:
+            return
         if self.hurt_time > 0:
             self.hurt_time -= 1
 
@@ -264,6 +266,7 @@ class Wall(pygame.sprite.Sprite):
         else:
             self.image = self.image_dark
 
+
 class Portal(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
@@ -281,6 +284,7 @@ class Portal(pygame.sprite.Sprite):
                 lives = Game.player.lives
                 Game.levels[Game.level]()
                 Game.player.lives= lives
+
 
 mainloop = True
 clock = pygame.time.Clock() # create clock object
