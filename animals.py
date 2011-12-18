@@ -81,3 +81,29 @@ class Fox(Animal):
 
         if self.lit:
             self.rect=self.rect.move(self.direction)
+
+class Wolf(Animal):
+    name = "wolf"
+    def __init__(self,x,y):
+        Animal.__init__(self,x,y)
+        self.direction=(1,0)
+
+    def is_hostile(self):
+        return True
+
+    def update(self):
+        Animal.update(self)
+
+        self.direction = (-5*Game.player.direction,0)
+        if Game.player.direction == -1:
+            self.image = pygame.transform.flip(self.image,True,False)
+            self.mask = pygame.mask.from_surface(self.image_light, 30)
+
+        if self.lit:
+            self.rect=self.rect.move(self.direction)
+
+class Snake(Animal):
+    name = "snake"
+
+    def is_hostile(self):
+        return True
