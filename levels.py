@@ -6,10 +6,29 @@ Game=game.Game
 import animals 
 import __main__ as main
 
-def level2():
-    Game.player=main.Girl(Game.player.lives)
+
+def level1():
+    Game.player=main.Girl()
     Game.torch=main.Torch(Game.player)
-    Game.player.place=(10,YRES-20)
+    Game.player.place=(20,180)
+    Game.ground=[]
+
+    Game.ground.append(main.Ground(10,200))
+    Game.ground.append(main.Ground(20,198))
+    Game.ground.append(main.Ground(30,195))
+    Game.ground.append(main.Ground(40,193))
+    Game.ground.append(main.Ground(50,191))
+    Game.ground.append(main.Ground(90,188))
+
+    Game.background = main.make_background()
+    Game.sprites = pygame.sprite.OrderedUpdates(Game.ground+
+                                                [Game.player,Game.player.feet,Game.torch]+
+                                                [main.Portal(90,150)])
+
+def level2():
+    Game.player=main.Girl()
+    Game.torch=main.Torch(Game.player)
+    Game.player.place=(20,180)
     Game.ground=[]
 
     for i in range (1+400/30):
@@ -27,27 +46,39 @@ def level2():
     Game.sprites = pygame.sprite.OrderedUpdates(sprites)
 
 def level3():
-    Game.player=main.Girl(Game.player.lives)
+    Game.player=main.Girl()
     Game.torch=main.Torch(Game.player)
-    Game.player.place(10, 200)
+    Game.player.place=(20,180)
     Game.ground=[]
+    
+    for i in range (1+(XRES/2)/30):
+        Game.ground.append(main.Ground(30*i,YRES-5))
 
-    Game.ground.append(main.Ground(10,200))
-    Game.ground.append(main.Ground(20,198))
-    Game.ground.append(main.Ground(30,195))
-    Game.ground.append(main.Ground(40,193))
-    Game.ground.append(main.Ground(50,191))
-    Game.ground.append(main.Ground(90,188))
+    for i in range (2+(YRES/2)/30):
+        Game.ground.append(main.Wall(XRES/2,YRES-30*i))
+    
+    Game.ground.append(main.Ground(50,YRES/2))
+    
+    Game.ground.append(main.Ground(150,3*YRES/4))
+
+    Game.ground.append(main.Ground(XRES/2-30,YRES/2-30))
+    Game.ground.append(main.Ground(XRES/2+90,YRES/2-30))
+
+    Game.ground.append(main.Ground(XRES/2+60,YRES/2+60))
+
 
     Game.background = main.make_background()
-    Game.sprites = pygame.sprite.OrderedUpdates(Game.ground+
-                                                [Game.player,Game.player.feet,Game.torch]+
-                                                [main.Portal(90,150)])
+    sprites= (Game.ground+
+              [Game.player,Game.player.feet,Game.torch]+
+              [main.Portal(XRES/2+60,YRES/2+60)])
+
+    Game.sprites = pygame.sprite.OrderedUpdates(sprites)
+
 
 def tutorial1():
     Game.player=main.Girl() # HEAL
     Game.torch=main.Torch(Game.player)
-    Game.player.place(10, 200)
+    Game.player.place=(20,180)
     Game.ground=[]
     for i in range(15):
         Game.ground.append(main.Ground(10*i,200-3*i))
@@ -64,9 +95,9 @@ def tutorial1():
                                                 [main.Portal(150,150)])
 
 def tutorial2():
-    Game.player=main.Girl( Game.player.lives)
+    Game.player=main.Girl( )
     Game.torch=main.Torch(Game.player)
-    Game.player.place(10, 200)
+    Game.player.place=(20,180)
     Game.ground=[]
 
     Game.ground.append(main.Ground(10,200))
@@ -90,9 +121,9 @@ def tutorial2():
                                                 [main.Portal(270,150)])
 
 def tutorial3():
-    Game.player=main.Girl(Game.player.lives)
+    Game.player=main.Girl()
     Game.torch=main.Torch(Game.player)
-    Game.player.place=(10,YRES-20)
+    Game.player.place=(20,180)
     Game.ground=[]
 
     for i in range (1+400/30):
@@ -101,7 +132,6 @@ def tutorial3():
     Game.background = main.make_background()
 
     font=pygame.font.Font("Ostrich Black.ttf",24)
-    #ren = font.render("point and click to illuminate your path" ,1,(200,200,200))
     ren = font.render("stay clear of the Monsters" ,1,(200,200,200))
     Game.background.blit(ren, (20,20))
 
@@ -111,9 +141,9 @@ def tutorial3():
                                                 [main.Portal(350,YRES)])
 
 def tutorial4():
-    Game.player=main.Girl(Game.player.lives)
+    Game.player=main.Girl()
     Game.torch=main.Torch(Game.player)
-    Game.player.place=(10,YRES-20)
+    Game.player.place=(20,180)
     Game.ground=[]
 
     for i in range (1+400/30):
@@ -130,5 +160,5 @@ def tutorial4():
                                                 [animals.Rabbit(150,235)]+
                                                 [main.Portal(350,YRES)])
 
-levels=[tutorial1,tutorial2,tutorial3,tutorial4,level3,level2]
+levels=[tutorial1,tutorial2,tutorial3,tutorial4,level1,level2,level3]
 

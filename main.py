@@ -84,7 +84,7 @@ class Girl(pygame.sprite.Sprite):
         return False
 
     def hit_side(self):
-        coll=pygame.sprite.collide_circle_ratio(1.2)
+        coll=pygame.sprite.collide_circle_ratio(1.1)
         for sprite in pygame.sprite.spritecollide(self, Game.ground, False, coll):
             if (sprite.rect.left + 5 > self.rect.right):
                 self.move(- 3, 0)
@@ -127,15 +127,21 @@ class Girl(pygame.sprite.Sprite):
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_a]:
             self.direction=-1
-            if not hit_side:
-                self.move(-5, 0)
+            for i in range(5):
+                if not hit_side:
+                    self.move(-1, 0)
+                else:
+                    break
             self.image = self.img_left
             self.mask = self.mask_left
 
         if pressed[pygame.K_d]:
             self.direction=1
-            if not hit_side:
-                self.move(5, 0)
+            for i in range(5):
+                if not hit_side:
+                    self.move(1, 0)
+                else:
+                    break
             self.image = self.img_right
             self.mask = self.mask_right
 
@@ -217,6 +223,27 @@ class Ground(pygame.sprite.Sprite):
         else:
             self.image = self.image_dark
 
+class Wall(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        pygame.sprite.Sprite.__init__(self) #call Sprite intializer
+        self.image_dark = pygame.transform.rotate(
+            pygame.image.load("stone-dark.png"),90)
+        self.image_light = pygame.transform.rotate(
+            pygame.image.load("stone.png"),90)
+        self.image = self.image_dark
+        self.rect = self.image.get_rect()
+        self.mask = pygame.Mask(self.rect.size)
+        self.mask.fill()
+        self.lit = False
+        self.rect.topleft=x,y
+
+    def update(self):
+        self.lit = pygame.sprite.collide_mask(Game.torch,self)
+        if self.lit:
+            self.image = self.image_light
+        else:
+            self.image = self.image_dark
+
 class Portal(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
@@ -231,7 +258,9 @@ class Portal(pygame.sprite.Sprite):
             if Game.level>=len(Game.levels):
                 Game.win=True
             else:
+                lives = Game.player.lives
                 Game.levels[Game.level]()
+                Game.player.lives= lives
 
 mainloop = True
 clock = pygame.time.Clock() # create clock object
