@@ -126,22 +126,26 @@ class Girl(pygame.sprite.Sprite):
         hit_side=self.hit_side()
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_a]:
-            self.direction=-1
-            for i in range(5):
-                if not hit_side:
-                    self.move(-1, 0)
-                else:
-                    break
+            if self.direction == 1:
+                self.direction=-1
+            else:
+                for i in range(5):
+                    if not hit_side:
+                        self.move(-1, 0)
+                    else:
+                        break
             self.image = self.img_left
             self.mask = self.mask_left
 
         if pressed[pygame.K_d]:
-            self.direction=1
-            for i in range(5):
-                if not hit_side:
-                    self.move(1, 0)
-                else:
-                    break
+            if self.direction == -1:
+                self.direction=1
+            else:
+                for i in range(5):
+                    if not hit_side:
+                        self.move(1, 0)
+                    else:
+                        break
             self.image = self.img_right
             self.mask = self.mask_right
 
@@ -189,20 +193,26 @@ class Torch(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.image,self.angle)
         self.mask = pygame.mask.from_surface(self.image, 30)
         self.rect = self.image.get_rect()
-        if self.holder.direction == -1 :
-            if self.angle > 5:
-                self.rect.topright = self.holder.rect.center
-            elif self.angle < .5:
-                self.rect.bottomright = self.holder.rect.center
+        if self.lit:
+            if self.holder.direction == -1 :
+                if self.angle > 1:
+                    self.rect.topright = self.holder.rect.midtop
+                elif self.angle < -1:
+                    self.rect.bottomright = self.holder.rect.midbottom
+                else:
+                    self.rect.midright = self.holder.rect.center
             else:
-                self.rect.midright = self.holder.rect.center
+                if self.angle > 1:
+                    self.rect.bottomleft = self.holder.rect.midbottom
+                elif self.angle < -1:
+                    self.rect.topleft = self.holder.rect.midtop
+                else:
+                    self.rect.midleft = self.holder.rect.center
         else:
-            if self.angle > 5:
-                self.rect.bottomleft = self.holder.rect.center
-            elif self.angle < .5:
-                self.rect.topleft = self.holder.rect.center
+            if self.holder.direction == -1 :
+                self.rect.center=self.holder.rect.midleft
             else:
-                self.rect.midleft = self.holder.rect.center
+                self.rect.center=self.holder.rect.midright
 
 class Ground(pygame.sprite.Sprite):
     def __init__(self,x,y):
@@ -214,7 +224,7 @@ class Ground(pygame.sprite.Sprite):
         self.mask = pygame.Mask(self.rect.size)
         self.mask.fill()
         self.lit = False
-        self.rect.topleft=x,y
+        self.rect.center=x,y
 
     def update(self):
         self.lit = pygame.sprite.collide_mask(Game.torch,self)
@@ -295,7 +305,7 @@ def make_background():
                                          3+random.randint(0,3)),
                             (x1, y1, x1+100, 240), 0)
 
-    background.blit(tree3,(random.randint(0,XRES),random.randint(YRES*1/10,YRES*2/10)))
+    background.blit(tree1,(random.randint(0,XRES),random.randint(YRES*1/10,YRES*2/10)))
     background.blit(tree1,(random.randint(0,XRES),random.randint(YRES*1/10,YRES*2/10)))
     background.blit(tree2,(random.randint(0,XRES),random.randint(YRES*1/10,YRES*2/10)))
 
