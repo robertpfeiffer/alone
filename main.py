@@ -71,14 +71,16 @@ class Girl(pygame.sprite.Sprite):
 
     def test_standing(self):
         for sprite in Game.ground:
-            if pygame.sprite.collide_rect(self.feet,sprite) and pygame.sprite.collide_mask(self.feet,sprite):
+            if (pygame.sprite.collide_rect(self.feet,sprite) 
+                and pygame.sprite.collide_mask(self.feet,sprite)):
                 if sprite.rect.top + 5 >=  self.feet.rect.bottom: #standing on it
                     return True
         return False
 
     def hit_head(self):
         for sprite in Game.ground:
-            if pygame.sprite.collide_rect(self,sprite) and pygame.sprite.collide_mask(self,sprite):
+            if (pygame.sprite.collide_rect(self,sprite)
+                and pygame.sprite.collide_mask(self,sprite)):
                 if sprite.rect.bottom - 5 <=  self.rect.top:
                     return True
         return False
