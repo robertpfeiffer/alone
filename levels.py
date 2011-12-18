@@ -74,6 +74,37 @@ def level3():
 
     Game.sprites = pygame.sprite.OrderedUpdates(sprites)
 
+def level4():
+    Game.player=main.Girl()
+    Game.torch=main.Torch(Game.player)
+    Game.player.place=(20,180)
+    Game.ground=[]
+
+    mobs=[]
+    
+    Game.ground.append(main.Ground(5,200))
+    Game.ground.append(main.Ground(25,200))
+    Game.ground.append(main.Ground(45,200))
+
+    mobs.append(animals.Bat(80,220))
+        
+    Game.ground.append(main.Ground(130,200))
+    mobs.append(animals.Rabbit(130,200))
+
+    mobs.append(animals.Bat(180,220))
+
+    Game.ground.append(main.Ground(250,200))
+    mobs.append(animals.Rabbit(250,200))
+
+    Game.ground.append(main.Ground(300,200))
+
+    Game.background = main.make_background()
+    sprites= (Game.ground+mobs+
+              [Game.player,Game.player.feet,Game.torch]+
+              [main.Portal(300,200)])
+
+    Game.sprites = pygame.sprite.OrderedUpdates(sprites)
+
 
 def tutorial1():
     Game.player=main.Girl() # HEAL
@@ -160,5 +191,5 @@ def tutorial4():
                                                 [animals.Rabbit(150,235)]+
                                                 [main.Portal(350,YRES)])
 
-levels=[tutorial1,tutorial2,tutorial3,tutorial4,level1,level2,level3]
+levels=[tutorial1,tutorial2,tutorial3,tutorial4,level1,level2,level3,level4,]
 
