@@ -84,14 +84,22 @@ class Girl(pygame.sprite.Sprite):
         return False
 
     def hit_side(self):
-        coll=pygame.sprite.collide_circle_ratio(1.1)
+        coll=pygame.sprite.collide_rect_ratio(1.1)
         for sprite in pygame.sprite.spritecollide(self, Game.ground, False, coll):
-            if (sprite.rect.left + 5 > self.rect.right):
-                self.move(- 3, 0)
-                return True
-            elif (sprite.rect.right < self.rect.right - 5):
-                self.move( 3, 0)
-                return True
+            x1,y1=self.rect.center
+            x2,y2=sprite.rect.center
+            xd = 0
+            if x1 < x2:
+                xd = -3
+            if x1 > x2:
+                xd = 3
+            if y1 < y2:
+                yd = -3
+            if y1 > y2:
+                yd = 3
+            self.move(xd, yd)
+
+            return True
         return False
 
     def climb(self):
@@ -293,7 +301,7 @@ def make_background():
     for i in range(20):
         background.blit(star,(random.randint(0,XRES),random.randint(0,YRES)))
 
-    background.blit(moon,(random.randint(0,XRES),random.randint(0,YRES)))
+    background.blit(moon,(random.randint(0,XRES),random.randint(0,YRES/3)))
 
     pygame.draw.ellipse(background, (9, 6, 3), (0, 120, 400, 240), 0)
 
