@@ -14,46 +14,90 @@ class Game(object):
     win = False
     # Singleton God class.
 
+class Feet(pygame.sprite.Sprite):
+
+    """The Feet have their own hitbox, so we can test if we can stand or climb on anything."""
+
+    def __init__(self,girl):
+        pygame.sprite.Sprite.__init__(self) #call Sprite intializer
+        self.image = pygame.image.load("girl-feet.png")
+        self.img_right = self.image
+        self.img_left = pygame.transform.flip(self.image,True,False)
+        self.girl=girl
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image, 30)
+        self.mask_right = self.mask
+        self.mask_left = pygame.mask.from_surface(self.img_left, 30)
+
+    def update(self):
+        if self.girl.direction==-1:
+            self.image = self.img_left
+            self.mask = self.mask_left
+
+        else:
+            self.image = self.img_right
+            self.mask = self.mask_right
+
+
 class Girl(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
-        girl_png = pygame.image.load("girl.png")
+        girl_png = pygame.image.load("girl-body.png")
         self.image = girl_png# pygame.transform.scale2x(girl_png)
         self.img_right = self.image
         self.img_left = pygame.transform.flip(self.image,True,False)
+        self.mask = pygame.mask.from_surface(self.image, 30)
+        self.mask_right = self.mask
+        self.mask_left = pygame.mask.from_surface(self.img_left, 30)
         self.rect = self.image.get_rect()
         self.direction = 1
         self.hitsound = pygame.mixer.Sound("Explosion2.wav")
         self.vert_speed = 0
         self.standing= False
+        self.feet=Feet(self)
+
+    def place(self,x,y):
+        self.feet.rect.bottomleft=(x,y)
+        self.rect.midbottom=self.feet.rect.midtop
 
     def hit(self,other):
         self.hitsound.play()
         Game.over=True
 
+    def move(self,x,y):
+        self.rect=self.rect.move(x,y)
+        self.feet.rect.midtop=self.rect.midbottom
+
     def test_standing(self):
-        s=False
         for sprite in Game.ground:
-            if pygame.sprite.collide_rect(self,sprite) and pygame.sprite.collide_mask(self,sprite):
-                if sprite.rect.midtop[1] + 5 >=  self.rect.midbottom[1]: #standing on it
-                    if sprite.rect.midtop[1] < self.rect.midbottom[1]:
-                        self.rect=self.rect.move(0,-1)
-                    s= True
-        return s
+            if pygame.sprite.collide_rect(self.feet,sprite) and pygame.sprite.collide_mask(self.feet,sprite):
+                if sprite.rect.top + 5 >=  self.feet.rect.bottom: #standing on it
+                    return True
+        return False
 
     def hit_head(self):
         for sprite in Game.ground:
             if pygame.sprite.collide_rect(self,sprite) and pygame.sprite.collide_mask(self,sprite):
-                if sprite.rect.midbottom[1] - 5 <=  self.rect.midtop[1]:
+                if sprite.rect.bottom - 5 <=  self.rect.top:
                     return True
         return False
 
     def hit_side(self):
-        coll=pygame.sprite.collide_circle_ratio(0.8)
-        for sprite in  pygame.sprite.spritecollide(self, Game.ground, False, coll):
-            if self.direction * sprite.rect.center[0] > self.direction * self.rect.center[0]:
+        coll=pygame.sprite.collide_circle_ratio(1.2)
+        for sprite in pygame.sprite.spritecollide(self, Game.ground, False, coll):
+            if (sprite.rect.left + 5 > self.rect.right):
+                self.move(- 3, 0)
+                return True
+            elif (sprite.rect.right < self.rect.right - 5):
+                self.move( 3, 0)
                 return True
         return False
+
+    def climb(self):
+        for sprite in Game.ground:
+            if pygame.sprite.collide_rect(self.feet,sprite) and pygame.sprite.collide_mask(self.feet,sprite):
+                while sprite.rect.top < self.feet.rect.bottom:
+                    self.move(0,-1)
 
     def fall(self):
         self.standing=False
@@ -64,44 +108,49 @@ class Girl(pygame.sprite.Sprite):
                 break
             if self.vert_speed>0 and self.hit_head():
                 self.vert_speed=-1
-                
-            self.rect = self.rect.move((0, -1 if self.vert_speed > 0 else 1))
+            self.move(0, -1 if self.vert_speed > 0 else 1)
         
         if not self.standing:
             self.vert_speed -= GRAVITY
+        else:
+            self.climb()            
 
         if self.rect.midtop[1] > YRES:
             Game.over = True
-
         
     def update(self):
+        hit_side=self.hit_side()
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_a]:
             self.direction=-1
-            if not self.hit_side():
-                self.rect = self.rect.move((-5, 0))
+            if not hit_side:
+                self.move(-5, 0)
             self.image = self.img_left
+            self.mask = self.mask_left
+
         if pressed[pygame.K_d]:
             self.direction=1
-            if not self.hit_side():
-                self.rect = self.rect.move((5, 0))
+            if not hit_side:
+                self.move(5, 0)
             self.image = self.img_right
+            self.mask = self.mask_right
+
+        self.hit_side()
         if pressed[pygame.K_w]:
             if self.standing:
-                self.rect = self.rect.move((0, -3))
+                self.move(0, -3)
                 self.vert_speed = 12
-        self.fall()
-        
+        self.fall()        
 
 class Torch(pygame.sprite.Sprite):
     def __init__(self,holder):
         self.holder = holder
 
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
-        self.lit_image = pygame.image.load("light.png")
-        #self.lit_image = pygame.transform.scale2x(self.lit_image)
 
+        self.lit_image = pygame.image.load("light.png")
         self.unlit_image = pygame.image.load("torch-off.png")
+
         self.image = self.unlit_image
         self.mask = pygame.mask.from_surface(self.image, 30)
         self.rect = self.image.get_rect()
@@ -210,6 +259,9 @@ class Animal(pygame.sprite.Sprite):
         else:
             self.image = self.image_dark
 
+class Rabbit(Animal):
+    name = "rabbit"
+
 class Bat(Animal):
     name = "bat"
     flight_range=80
@@ -295,7 +347,7 @@ def make_background():
 def level2():
     Game.player=Girl()
     Game.torch=Torch(Game.player)
-    Game.player.rect.bottomleft=(10,YRES-20)
+    Game.player.place=(10,YRES-20)
     Game.ground=[]
 
     for i in range (1+400/30):
@@ -305,14 +357,14 @@ def level2():
 
     Game.background = make_background()
     Game.sprites = pygame.sprite.OrderedUpdates(Game.ground+
-                                                [Game.player,Game.torch]+
+                                                [Game.player,Game.player.feet,Game.torch]+
                                                 [Bat(80,YRES),Bat(150,YRES),Fox(250,YRES)]+
                                                 [Portal(350,YRES)])
 
 def level3():
     Game.player=Girl()
     Game.torch=Torch(Game.player)
-    Game.player.rect.bottomleft=(10, 200)
+    Game.player.place(10, 200)
     Game.ground=[]
 
     Game.ground.append(Ground(10,200))
@@ -324,21 +376,37 @@ def level3():
 
     Game.background = make_background()
     Game.sprites = pygame.sprite.OrderedUpdates(Game.ground+
-                                                [Game.player,Game.torch]+
+                                                [Game.player,Game.player.feet,Game.torch]+
                                                 [Portal(90,150)])
 
-
-def level1():
+def tutorial1():
     Game.player=Girl()
     Game.torch=Torch(Game.player)
-    Game.player.rect.bottomleft=(10, 200)
+    Game.player.place(10, 200)
+    Game.ground=[]
+    for i in range(15):
+        Game.ground.append(Ground(10*i,200-3*i))
+    for i in range(40):
+        Game.ground.append(Ground(-15,200-3*i))
+    Game.background = make_background()
+
+    font=pygame.font.Font("Ostrich Black.ttf",20)
+    ren = font.render("use WASD keys to walk home" ,1,(200,200,200))
+    Game.background.blit(ren, (20,20))
+
+    Game.sprites = pygame.sprite.OrderedUpdates(Game.ground+
+                                                [Game.player,Game.player.feet,Game.torch]+
+                                                [Portal(150,150)])
+
+def tutorial2():
+    Game.player=Girl()
+    Game.torch=Torch(Game.player)
+    Game.player.place(10, 200)
     Game.ground=[]
 
     Game.ground.append(Ground(10,200))
     Game.ground.append(Ground(40,200))
-
     Game.ground.append(Ground(10,120))
-
     Game.ground.append(Ground(120,200))
     Game.ground.append(Ground(150,200))
     Game.ground.append(Ground(180,200))
@@ -347,14 +415,65 @@ def level1():
     Game.ground.append(Ground(270,150))
 
     Game.background = make_background()
+
+    font=pygame.font.Font("Ostrich Black.ttf",24)
+    ren = font.render("point and click to illuminate your path" ,1,(200,200,200))
+    Game.background.blit(ren, (20,20))
+
     Game.sprites = pygame.sprite.OrderedUpdates(Game.ground+
-                                                [Game.player,Game.torch]+
+                                                [Game.player,Game.player.feet,Game.torch]+
                                                 [Portal(270,150)])
+
+def tutorial3():
+    Game.player=Girl()
+    Game.torch=Torch(Game.player)
+    Game.player.place=(10,YRES-20)
+    Game.ground=[]
+
+    for i in range (1+400/30):
+        Game.ground.append(Ground(30*i,YRES-5))
+
+    Game.background = make_background()
+
+    font=pygame.font.Font("Ostrich Black.ttf",24)
+    #ren = font.render("point and click to illuminate your path" ,1,(200,200,200))
+    ren = font.render("stay clear of the Monsters" ,1,(200,200,200))
+    Game.background.blit(ren, (20,20))
+
+    Game.sprites = pygame.sprite.OrderedUpdates(Game.ground+
+                                                [Game.player,Game.player.feet,Game.torch]+
+                                                [Bat(150,150)]+
+                                                [Portal(350,YRES)])
+
+def tutorial4():
+    Game.player=Girl()
+    Game.torch=Torch(Game.player)
+    Game.player.place=(10,YRES-20)
+    Game.ground=[]
+
+    for i in range (1+400/30):
+        Game.ground.append(Ground(30*i,YRES-5))
+
+    Game.background = make_background()
+
+    font=pygame.font.Font("Ostrich Black.ttf",24)
+    #ren = font.render("point and click to illuminate your path" ,1,(200,200,200))
+    ren = font.render("Rabbits are harmless" ,1,(200,200,200))
+    Game.background.blit(ren, (20,20))
+
+    Game.sprites = pygame.sprite.OrderedUpdates(Game.ground+
+                                                [Game.player,Game.player.feet,Game.torch]+
+                                                [Rabbit(150,235)]+
+                                                [Portal(350,YRES)])
+
+
+Game.levels=[tutorial1,tutorial2,tutorial3,tutorial4,level3,level2]
+
+def startgame():
     Game.level=0
-    Game.levels=[level1,level3,level2]
+    Game.levels[0]()
 
-
-level1()
+startgame()
 
 while mainloop:
     tick_time = clock.tick(fps) # milliseconds since last frame
