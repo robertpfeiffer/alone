@@ -10,11 +10,13 @@ class Animal(pygame.sprite.Sprite):
         path_dark=my_class.name+"-eyes.png"
         self.image_dark = pygame.image.load(path_dark)
         self.image_light= pygame.image.load(path_lit)
-        self.mask = pygame.mask.from_surface(self.image_light, 30)
+        self.mask_light = pygame.mask.from_surface(self.image_light, 30)
+        self.mask_dark = pygame.mask.from_surface(self.image_dark, 30)
+        self.mask = self.mask_dark
         self.lit = False
         self.image = self.image_dark
         self.rect = self.image.get_rect()
-        self.rect.bottomleft=x,y
+        self.rect.midbottom=x,y
         self.origin = self.rect
 
     def is_hostile(self):
@@ -29,8 +31,10 @@ class Animal(pygame.sprite.Sprite):
 
         if self.lit:
             self.image = self.image_light
+            self.mask = self.mask_light
         else:
             self.image = self.image_dark
+            self.mask = self.mask_dark
 
 class Rabbit(Animal):
     name = "rabbit"
