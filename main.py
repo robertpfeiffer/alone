@@ -55,14 +55,21 @@ class Girl(pygame.sprite.Sprite):
         self.vert_speed = 0
         self.standing= False
         self.feet=Feet(self)
+        self.lives=4
+        self.hurt_time=30
 
     def place(self,x,y):
         self.feet.rect.bottomleft=(x,y)
         self.rect.midbottom=self.feet.rect.midtop
 
     def hit(self,other):
-        self.hitsound.play()
-        Game.over=True
+        if self.hurt_time < 1:
+            self.hitsound.play()
+            self.lives -=1
+            self.hurt_time = 30
+
+        if self.lives == 0:
+            Game.over=True
 
     def move(self,x,y):
         self.rect=self.rect.move(x,y)
@@ -119,6 +126,9 @@ class Girl(pygame.sprite.Sprite):
             Game.over = True
         
     def update(self):
+        if self.hurt_time > 0:
+            self.hurt_time -= 1
+
         hit_side=self.hit_side()
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_a]:
@@ -475,6 +485,11 @@ def startgame():
 
 startgame()
 
+heart=pygame.transform.scale(pygame.image.load("heart.png"),(30,30))
+
+
+game_over_time=180
+
 while mainloop:
     tick_time = clock.tick(fps) # milliseconds since last frame
     pygame.display.set_caption("press Esc to quit. FPS: %.2f" % (clock.get_fps()))
@@ -485,11 +500,17 @@ while mainloop:
     Game.sprites.draw(surface);
     pygame.transform.scale(Game.background, [XRES*SCALE,YRES*SCALE], screen)
     pygame.transform.scale(surface, [XRES*SCALE,YRES*SCALE], screen)
+
+    for i in range(Game.player.lives):
+        screen.blit(heart,[20 + 35*i,YRES*SCALE - 50 ])
     
     if Game.over or Game.win:
         font=pygame.font.Font("Ostrich Black.ttf",100)
         ren = font.render("THE END" if Game.win else "GAME OVER",1,(50,50,255))
         screen.blit(ren, (20,20))
+        game_over_time -= 1
+        if game_over_time < 0:
+            mainloop=False
 
     pygame.display.flip()
 
