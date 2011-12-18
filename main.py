@@ -335,12 +335,11 @@ startgame()
 heart=pygame.transform.scale(pygame.image.load("heart.png"),(30,30))
 game_over_time=180
 
-logo=pygame.transform.scale(pygame.image.load("logo.png"),(480,360))
-screen.blit(logo, ((XRES*SCALE-480)/2,(YRES*SCALE-360)/2))
+logo=pygame.transform.scale(pygame.image.load("logo.png"),(240*SCALE,180*SCALE))
+screen.blit(logo, ((XRES*SCALE-240*SCALE)/SCALE,(YRES*SCALE-180*SCALE)/SCALE))
 pygame.display.flip()
 for i in range(3):
     clock.tick(1)
-
 
 while mainloop:
     tick_time = clock.tick(FPS) # milliseconds since last frame

@@ -3,7 +3,7 @@ Alone in the Forest - a nightmare platformer
 * Theme
 
   You are alone in a forest. You cannot see the way home. You have a
-  torch. When you use it, you You need to use the might not be alone any more.
+  torch. When you use it, you might not be alone any more.
 
   The central game mechanic is based on cartoon logic. The Monsters
   never move the darkness. A pair of eyes only becomes active when you
