@@ -1,6 +1,8 @@
+
 import pygame,math,random
 from pygame.locals import *
 from config import *
+import webbrowser
 
 import game
 Game=game.Game
@@ -71,7 +73,7 @@ class Girl(pygame.sprite.Sprite):
 
     def test_standing(self):
         for sprite in Game.ground:
-            if (pygame.sprite.collide_rect(self.feet,sprite) 
+            if (pygame.sprite.collide_rect(self.feet,sprite)
                 and pygame.sprite.collide_mask(self.feet,sprite)):
                 if sprite.rect.top + 5 >=  self.feet.rect.bottom: #standing on it
                     return True
@@ -333,17 +335,18 @@ def startgame():
 
 startgame()
 heart=pygame.transform.scale(pygame.image.load("heart.png"),(30,30))
-game_over_time=180
-
+game_over_time=300
+font=pygame.font.Font("Ostrich Black.ttf",100)
 logo=pygame.transform.scale(pygame.image.load("logo.png"),(240*SCALE,180*SCALE))
 screen.blit(logo, ((XRES*SCALE-240*SCALE)/SCALE,(YRES*SCALE-180*SCALE)/SCALE))
 pygame.display.flip()
+
 for i in range(3):
     clock.tick(1)
 
 while mainloop:
     tick_time = clock.tick(FPS) # milliseconds since last frame
-    pygame.display.set_caption("You are alone in a forest. [Esc]quit, [W]jump, [A]left, [D]right, FPS: %.2f" % (clock.get_fps()))
+    pygame.display.set_caption("You are alone in the Dark Forest. [Esc]quit, [W]jump, [A]left, [D]right, FPS: %.2f" % (clock.get_fps()))
 
     surface = Game.background.copy()
 
@@ -356,8 +359,12 @@ while mainloop:
         screen.blit(heart,[20 + 35*i,YRES*SCALE - 50 ])
 
     if Game.over or Game.win:
-        font=pygame.font.Font("Ostrich Black.ttf",100)
-        ren = font.render("THE END" if Game.win else "GAME OVER",1,(50,50,255))
+        if game_over_time > 200:
+            ren  = font.render("THE END" if Game.win else "GAME OVER",1,(50,50,255))
+        elif game_over_time > 60 and Game.win:
+            ren = font.render("PRESS SPACE TO RATE",1,(50,50,255))
+        else:
+            ren = font.render("THE GAME WILL EXIT NOW",1,(50,50,255))
         screen.blit(ren, (20,20))
         game_over_time -= 1
         if game_over_time < 0:
@@ -370,5 +377,8 @@ while mainloop:
             mainloop = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
+                mainloop = False
+            if event.key == pygame.K_SPACE:
+                webbrowser.open("http://www.ludumdare.com/compo/ludum-dare-22/?action=preview&uid=7968")
                 mainloop = False
     pygame.display.update()
