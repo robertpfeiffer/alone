@@ -12,13 +12,17 @@ Dark Forest - a nightmare platformer
   Try not to get eaten and do not jump into bottomless pits! The
   fingerposts point to the next level.
 
-
 * Requirements
 
   Programmed with python2.7.2 and pygame1.9.1 on Ubuntu 11.10.
   It should work with the python-pygame Ubuntu universe package.
 
-run with =python main.py=
+  On Windows, be sure to use a 32-bit Python and a 32-Bit-Pygame.
+  http://python.org/ftp/python/2.7.2/python-2.7.2.msi
+  http://pygame.org/ftp/pygame-1.9.2a0.win32-py2.7.msi
+
+  run with =python main.py=
+  doubleclick on main.py on windows (after installing pygame)
 
 * Controls: 
   A,D: left,right
