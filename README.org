@@ -18,19 +18,21 @@ Dark Forest - a nightmare platformer
   It should work with the python-pygame Ubuntu universe package.
 
   On Windows, be sure to use a 32-bit Python and a 32-Bit-Pygame.
-  http://python.org/ftp/python/2.7.2/python-2.7.2.msi
-  http://pygame.org/ftp/pygame-1.9.2a0.win32-py2.7.msi
+  [[http://python.org/ftp/python/2.7.2/python-2.7.2.msi]]
+  [[http://pygame.org/ftp/pygame-1.9.2a0.win32-py2.7.msi]]
 
   run with =python main.py=
   doubleclick on main.py on windows (after installing pygame)
 
-* Controls: 
-  A,D: left,right
-  W: jump
+* Controls:
 
-  Mouse: point torch
-  click to turn on the Light
-
++-----------+-----------------+
+| A         | left            |
+| D         | right           |
+| W         | jump            |
+| mouse     | point torch     |
+| leftclick | turn on light   |
++-----------+-----------------+
 
 
   
