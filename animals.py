@@ -8,8 +8,8 @@ class Animal(pygame.sprite.Sprite):
         my_class=type(self)
         path_lit=my_class.name+".png"
         path_dark=my_class.name+"-eyes.png"
-        self.image_dark = pygame.image.load(path_dark)
-        self.image_light= pygame.image.load(path_lit)
+        self.image_dark = pygame.image.load("assets/sprites/"+path_dark)
+        self.image_light= pygame.image.load("assets/sprites/"+path_lit)
         self.mask_light = pygame.mask.from_surface(self.image_light, 30)
         self.mask_dark = pygame.mask.from_surface(self.image_dark, 30)
         self.mask = self.mask_dark

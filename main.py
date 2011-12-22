@@ -17,7 +17,7 @@ class Feet(pygame.sprite.Sprite):
     """The Feet have their own hitbox, so we can test if we can stand or climb on anything."""
     def __init__(self,girl):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
-        self.image = pygame.image.load("girl-feet.png")
+        self.image = pygame.image.load("assets/sprites/girl-feet.png")
         self.img_right = self.image
         self.img_left = pygame.transform.flip(self.image,True,False)
         self.girl=girl
@@ -38,7 +38,7 @@ class Feet(pygame.sprite.Sprite):
 class Girl(pygame.sprite.Sprite):
     def __init__(self,lives=LIVES):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
-        girl_png = pygame.image.load("girl-body.png")
+        girl_png = pygame.image.load("assets/sprites/girl-body.png")
         self.image = girl_png# pygame.transform.scale2x(girl_png)
         self.img_right = self.image
         self.img_left = pygame.transform.flip(self.image,True,False)
@@ -47,7 +47,7 @@ class Girl(pygame.sprite.Sprite):
         self.mask_left = pygame.mask.from_surface(self.img_left, 30)
         self.rect = self.image.get_rect()
         self.direction = 1
-        self.hitsound = pygame.mixer.Sound("Explosion2.wav")
+        self.hitsound = pygame.mixer.Sound("assets/sound/Explosion2.wav")
         self.vert_speed = 0
         self.standing= False
         self.feet=Feet(self)
@@ -176,8 +176,8 @@ class Torch(pygame.sprite.Sprite):
 
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
 
-        self.lit_image = pygame.image.load("light.png")
-        self.unlit_image = pygame.image.load("torch-off.png")
+        self.lit_image = pygame.image.load("assets/sprites/light.png")
+        self.unlit_image = pygame.image.load("assets/sprites/torch-off.png")
 
         self.image = self.unlit_image
         self.mask = pygame.mask.from_surface(self.image, 30)
@@ -231,8 +231,8 @@ class Torch(pygame.sprite.Sprite):
 class Ground(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
-        self.image_dark = pygame.image.load("stone-dark.png")
-        self.image_light =  pygame.image.load("stone.png")
+        self.image_dark = pygame.image.load("assets/sprites/stone-dark.png")
+        self.image_light =  pygame.image.load("assets/sprites/stone.png")
         self.image = self.image_dark
         self.rect = self.image.get_rect()
         self.mask = pygame.Mask(self.rect.size)
@@ -251,9 +251,9 @@ class Wall(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
         self.image_dark = pygame.transform.rotate(
-            pygame.image.load("stone-dark.png"),90)
+            pygame.image.load("assets/sprites/stone-dark.png"),90)
         self.image_light = pygame.transform.rotate(
-            pygame.image.load("stone.png"),90)
+            pygame.image.load("assets/sprites/stone.png"),90)
         self.image = self.image_dark
         self.rect = self.image.get_rect()
         self.mask = pygame.Mask(self.rect.size)
@@ -272,7 +272,7 @@ class Wall(pygame.sprite.Sprite):
 class Portal(pygame.sprite.Sprite):
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
-        self.image = pygame.image.load("portal.png")
+        self.image = pygame.image.load("assets/sprites/portal.png")
         self.mask = pygame.mask.from_surface(self.image, 30)
         self.rect = self.image.get_rect()
         self.rect.bottomleft=x,y
@@ -296,10 +296,10 @@ screen.fill([0,0,0])
 pygame.key.set_repeat(1, 1)
 
 def make_background():
-    star=pygame.image.load("star.png")
-    moon=pygame.image.load("moon3.png")
-    tree2=pygame.image.load("tree2.png")
-    tree3=pygame.image.load("tree3.png")
+    star=pygame.image.load("assets/sprites/star.png")
+    moon=pygame.image.load("assets/sprites/moon3.png")
+    tree2=pygame.image.load("assets/sprites/tree2.png")
+    tree3=pygame.image.load("assets/sprites/tree3.png")
 
     tree1=pygame.transform.scale(tree2, (2*tree2.get_rect().size[0],2*tree2.get_rect().size[1]))
     tree2=pygame.transform.scale(tree3, (3*tree3.get_rect().size[0],3*tree3.get_rect().size[1]))
@@ -334,10 +334,10 @@ def startgame():
     Game.levels[0]()
 
 startgame()
-heart=pygame.transform.scale(pygame.image.load("heart.png"),(30,30))
+heart=pygame.transform.scale(pygame.image.load("assets/ui/heart.png"),(30,30))
 game_over_time=300
-font=pygame.font.Font("Ostrich Black.ttf",100)
-logo=pygame.transform.scale(pygame.image.load("logo.png"),(240*SCALE,180*SCALE))
+font=pygame.font.Font("assets/ui/Ostrich Black.ttf",70)
+logo=pygame.transform.scale(pygame.image.load("assets/logo.png"),(240*SCALE,180*SCALE))
 screen.blit(logo, ((XRES*SCALE-240*SCALE)/SCALE,(YRES*SCALE-180*SCALE)/SCALE))
 pygame.display.flip()
 

@@ -145,7 +145,7 @@ def level6():
     Game.ground.append(main.Ground(390,200))
 
     Game.background = main.make_background()
-    Game.background.blit(pygame.image.load("home.png"), (310,120))
+    Game.background.blit(pygame.image.load("assets/sprites/home.png"), (310,120))
     
     sprites= (Game.ground+
               [Game.player,Game.player.feet,Game.torch]+
@@ -164,7 +164,7 @@ def tutorial1():
         Game.ground.append(main.Ground(-15,200-3*i))
     Game.background = main.make_background()
 
-    font=pygame.font.Font("Ostrich Black.ttf",20)
+    font=pygame.font.Font("assets/ui/Ostrich Black.ttf",20)
     ren = font.render("use WASD keys to walk home" ,1,(200,200,200))
     Game.background.blit(ren, (20,20))
 
@@ -190,7 +190,7 @@ def tutorial2():
 
     Game.background = main.make_background()
 
-    font=pygame.font.Font("Ostrich Black.ttf",24)
+    font=pygame.font.Font("assets/ui/Ostrich Black.ttf",24)
     ren = font.render("point and click to illuminate your path" ,1,(200,200,200))
     Game.background.blit(ren, (20,20))
 
@@ -209,7 +209,7 @@ def tutorial3():
 
     Game.background = main.make_background()
 
-    font=pygame.font.Font("Ostrich Black.ttf",24)
+    font=pygame.font.Font("assets/ui/Ostrich Black.ttf",24)
     ren = font.render("stay clear of the Monsters" ,1,(200,200,200))
     Game.background.blit(ren, (20,20))
 
@@ -229,7 +229,7 @@ def tutorial4():
 
     Game.background = main.make_background()
 
-    font=pygame.font.Font("Ostrich Black.ttf",24)
+    font=pygame.font.Font("assets/ui/Ostrich Black.ttf",24)
     ren = font.render("Rabbits are harmless" ,1,(200,200,200))
     Game.background.blit(ren, (20,20))
 
