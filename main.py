@@ -9,6 +9,8 @@ Game=game.Game
 import animals
 import levels
 
+import pygame._view # for py2exe
+
 pygame.init()
 pygame.font.init()
 
@@ -36,6 +38,7 @@ class Feet(pygame.sprite.Sprite):
             self.mask = self.mask_right
 
 class Girl(pygame.sprite.Sprite):
+    "the player character"
     def __init__(self,lives=LIVES):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
         girl_png = pygame.image.load("assets/sprites/girl-body.png")
@@ -171,6 +174,7 @@ class Girl(pygame.sprite.Sprite):
         self.fall()
 
 class Torch(pygame.sprite.Sprite):
+    "The only item you can carry"
     def __init__(self,holder):
         self.holder = holder
 
@@ -229,6 +233,7 @@ class Torch(pygame.sprite.Sprite):
                 self.rect.center=self.holder.rect.midright
 
 class Ground(pygame.sprite.Sprite):
+    "the solid, walkable part of the world" 
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
         self.image_dark = pygame.image.load("assets/sprites/stone-dark.png")
@@ -248,6 +253,7 @@ class Ground(pygame.sprite.Sprite):
             self.image = self.image_dark
 
 class Wall(pygame.sprite.Sprite):
+    "like ground but vertical"
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
         self.image_dark = pygame.transform.rotate(
@@ -270,6 +276,7 @@ class Wall(pygame.sprite.Sprite):
 
 
 class Portal(pygame.sprite.Sprite):
+    "portal to the next level"
     def __init__(self,x,y):
         pygame.sprite.Sprite.__init__(self) #call Sprite intializer
         self.image = pygame.image.load("assets/sprites/portal.png")
@@ -378,7 +385,7 @@ while mainloop:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 mainloop = False
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE and Game.win:
                 webbrowser.open("http://www.ludumdare.com/compo/ludum-dare-22/?action=preview&uid=7968")
                 mainloop = False
     pygame.display.update()
