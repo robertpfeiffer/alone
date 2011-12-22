@@ -9,7 +9,8 @@ Game=game.Game
 import animals
 import levels
 
-import pygame._view # for py2exe
+# HACK: uncomment this line only on win32 when packaging
+# import pygame._view # for py2exe
 
 pygame.init()
 pygame.font.init()
