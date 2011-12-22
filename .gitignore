@@ -1,0 +1,9 @@
+screenshot*
+*.pyc
+*.pyd
+*.dll
+*~
+\#*
+dist/
+build/
+assets/unused
